@@ -129,7 +129,7 @@
     }
 
     function random_food(min, max) {
-      return Math.round((Math.random() * (max-min) + min) / 90) * 90;
+      return Math.round((Math.random() * (max-min) + min) / 100) * 10;
     }
 
     function gen_food() {
