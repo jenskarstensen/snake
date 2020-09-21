@@ -138,7 +138,6 @@
       snake.forEach(function has_snake_eaten_food(part) {
         const has_eaten = part.x == food_x && part.y == food_y;
         if (has_eaten) gen_food();
-        if (change_direction) gen_food();
       });
     }
 
@@ -150,6 +149,7 @@
 
     
       if (changing_direction) return;
+        gen_food();
       changing_direction = true;
       const keyPressed = event.keyCode;
       const goingUp = dy === -10;
