@@ -138,6 +138,7 @@
       snake.forEach(function has_snake_eaten_food(part) {
         const has_eaten = part.x == food_x && part.y == food_y;
         if (has_eaten) gen_food();
+        if (change_direction) gen_food();
       });
     }
 
