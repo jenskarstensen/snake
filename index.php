@@ -65,6 +65,8 @@
     let changing_direction = false;
     let food_x;
     let food_y;
+    let enemy_x;
+    let enemy_y;
     let dx = 10;
     let dy = 0;
     
@@ -75,6 +77,8 @@
 
     gen_food();
 
+    gen_enemy();
+    
     document.addEventListener("keydown", change_direction);
     
     function main() {
@@ -86,16 +90,17 @@
         clear_board();
         drawFood();
         move_snake();
+        drawEnemy();
         drawSnake();
         main();
       }, 100)
     }
     
     function clear_board() {
-      snakeboard_ctx.fillStyle = board_background;
-      snakeboard_ctx.strokestyle = board_border;
-      snakeboard_ctx.fillRect(0, 0, snakeboard.width, snakeboard.height);
-      snakeboard_ctx.strokeRect(0, 0, snakeboard.width, snakeboard.height);
+     snakeboard_ctx.fillStyle = board_background;
+     snakeboard_ctx.strokestyle = board_border;
+     snakeboard_ctx.fillRect(0, 0, snakeboard.width, snakeboard.height);
+     snakeboard_ctx.strokeRect(0, 0, snakeboard.width, snakeboard.height);
     }
     
     function drawSnake() {
@@ -109,6 +114,13 @@
       snakeboard_ctx.strokeRect(food_x, food_y, 10, 10);
     }
     
+    function drawEnemy() {
+      snakeboard_ctx.fillStyle = 'red';
+      snakeboard_ctx.strokestyle = 'darkred';
+      snakeboard_ctx.fillRect(enemy_x, enemy_y, 10, 10);
+      snakeboard_ctx.strokeRect(enemy_x, enemy_y, 10, 10);
+    }
+
     function drawSnakePart(snakePart) {
 
       snakeboard_ctx.fillStyle = snake_col;
@@ -132,14 +144,22 @@
       return Math.round((Math.random() * (max-min) + min) / 10) * 10;
     }
 
+    function random_enemy(min, max) {
+      return Math.round((Math.random() * (max-min) + min) / 10) * 10;
+    }
+
     function gen_food() {
       food_x = random_food(0, snakeboard.width - 10);
       food_y = random_food(0, snakeboard.height - 10);
       snake.forEach(function has_snake_eaten_food(part) {
         const has_eaten = part.x == food_x && part.y == food_y;
         if (has_eaten) gen_food();
-        if (change_direction) gen_food();
       });
+    }
+
+    function gen_enemy() {
+      enemy_x = random_enemy(0, snakeboard.width - 10);
+      enemy_y = random_enemy(0, snakeboard.height - 10);
     }
 
     function change_direction(event) {
@@ -150,7 +170,6 @@
 
     
       if (changing_direction) return;
-        gen_food();
       changing_direction = true;
       const keyPressed = event.keyCode;
       const goingUp = dy === -10;
@@ -183,6 +202,8 @@
       const head = {x: snake[0].x + dx, y: snake[0].y + dy};
       snake.unshift(head);
       const has_eaten_food = snake[0].x === food_x && snake[0].y === food_y;
+      const has_hit_enemy = snake[0].x === enemy_x && snake[0].y === enemy_y;
+
       if (has_eaten_food) {
         score += 1;
         document.getElementById('score').innerHTML = score;
@@ -190,7 +211,16 @@
       } else {
         snake.pop();
       }
+      if (has_hit_enemy) {
+        score -= 1;
+        document.getElementById('score').innerHTML = score;
+        snakeboard_ctx.fillStyle = 'red';
+        snakeboard_ctx.strokestyle = 'darkred';
+        snakeboard_ctx.fillRect(enemy_x, enemy_y, 10, 10);
+        snakeboard_ctx.strokeRect(enemy_x, enemy_y, 10, 10);
+        enemy_x = random_enemy(0, snakeboard.width - 10);
+        enemy_y = random_enemy(0, snakeboard.height - 10);
+      }
     }
-
   </script>
 </html>
