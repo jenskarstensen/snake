@@ -150,6 +150,7 @@
 
     
       if (changing_direction) return;
+        gen_food();
       changing_direction = true;
       const keyPressed = event.keyCode;
       const goingUp = dy === -10;
